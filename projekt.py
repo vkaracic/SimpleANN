@@ -1,4 +1,4 @@
-from matplotlib import pyplot
+from pylab import * 
 import sys
 import NN as nn
 import math
@@ -13,6 +13,8 @@ class MainWindow(QDialog):
 
         # initialization of elements on the GUI:
         ## Training part
+        iNodesLabel = QLabel('Input nodes: ')
+        oNodesLabel = QLabel('Output nodes: ')
         self.iNodesSB = QSpinBox()
         self.oNodesSB = QSpinBox()
         generateNN = QPushButton('Generate NN')
@@ -44,24 +46,26 @@ class MainWindow(QDialog):
         #### LAYOUT ####
         # Training part
         layout = QGridLayout()
-        layout.addWidget(self.iNodesSB, 0, 0)
-        layout.addWidget(self.oNodesSB, 0, 1)
+        layout.addWidget(iNodesLabel, 0, 0)
+        layout.addWidget(self.iNodesSB, 0, 1)
+        layout.addWidget(oNodesLabel, 1, 0)
+        layout.addWidget(self.oNodesSB, 1, 1)
 
-        layout.addWidget(generateNN, 1, 0, 1, 2)
+        layout.addWidget(generateNN, 2, 0, 1, 2)
 
-        layout.addWidget(self.NNLabel, 2, 0, 1, 2)
+        layout.addWidget(self.NNLabel, 3, 0, 1, 2)
 
-        layout.addWidget(selectTrainData, 3, 0)
-        layout.addWidget(self.TrainDataLabel, 3, 1)
+        layout.addWidget(selectTrainData, 4, 0)
+        layout.addWidget(self.TrainDataLabel, 4, 1)
 
-        layout.addWidget(nuIterLabel, 4, 0)
-        layout.addWidget(self.numIter, 4, 1)
+        layout.addWidget(nuIterLabel, 5, 0)
+        layout.addWidget(self.numIter, 5, 1)
         
-        layout.addWidget(trainNN, 5, 0)
-        layout.addWidget(self.trainError, 5, 1)
+        layout.addWidget(trainNN, 6, 0)
+        layout.addWidget(self.trainError, 6, 1)
 
-        layout.addWidget(finalErrorRateLabel, 6, 0)
-        layout.addWidget(self.finalErrorRate, 6, 1)
+        layout.addWidget(finalErrorRateLabel, 7, 0)
+        layout.addWidget(self.finalErrorRate, 7, 1)
 
         layout.addWidget(saveNN)
 
@@ -74,7 +78,7 @@ class MainWindow(QDialog):
 
         layout.addWidget(testButton, 2, 4)
 
-        layout.addWidget(self.testBrowser, 3, 4, 3, 4)
+        layout.addWidget(self.testBrowser, 3, 4, 5, 3)
 
 
 
@@ -129,8 +133,12 @@ class MainWindow(QDialog):
     def plot_error_rate(self, error):
         X = range(0,len(error))
         Y = error
-        pyplot.plot( X, Y, '-' )
-        pyplot.show()
+        plot( X, Y)
+        xlabel('Time')
+        ylabel('Error')
+        title('Error rate')
+        grid(True)
+        show()
 
     def save_NN(self):
         format = "*.nn"
