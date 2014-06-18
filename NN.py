@@ -28,7 +28,7 @@ class NN:
     
   def runNN (self, inputs):
     if len(inputs) != self.ni-1:
-      print 'incorrect number of inputs'
+      print('incorrect number of inputs')
     
     for i in range(self.ni-1):
       self.ai[i] = inputs[i]
@@ -82,14 +82,14 @@ class NN:
         
         
   def weights(self):
-    print 'Input weights:'
+    print ('Input weights:')
     for i in range(self.ni):
       print self.wi[i]
     print
-    print 'Output weights:'
+    print ('Output weights:')
     for j in range(self.nh):
       print self.wo[j]
-    print ''
+    print ('')
   
   # spremanje NN
   # Format spremanja NN:
@@ -125,9 +125,15 @@ class NN:
 
   def test(self, patterns):
     test_results = []
+    control = 0
     for p in patterns:
       inputs = p[0]
-      test_results.append([p[0], '>', str(self.runNN(inputs)), 'T:', p[1]])
+      result = self.runNN(inputs)[0]
+      if p[1][0] == 1 and result < 0.5: control = 1
+      if p[1][0] == 0 and result > 0.5: control = 1
+      string = "%.2f, %.2f\t %f\t T: %d %d" % (p[0][0], p[0][1], self.runNN(inputs)[0], p[1][0], control)
+      test_results.append(string)
+      control = 0
     return test_results
   
   def train (self, patterns, max_iterations = 1000, N=0.5, M=0.1):
@@ -139,7 +145,7 @@ class NN:
         self.runNN(inputs)
         error = self.backPropagate(targets, N, M)
       if i % 50 == 0:
-        print 'Combined error', error
+        print ('Combined error', error)
         error_rate.append(error)
     return error_rate
 

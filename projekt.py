@@ -124,7 +124,7 @@ class MainWindow(QDialog):
         numIterValue = self.numIter.value()
         try:
             error_rate = self.nn.train(self.train_data, numIterValue)
-            self.finalErrorRate.setText(str("%.5f" % error_rate[-1]))
+            self.finalErrorRate.setText(str("<b>%.5f</b>" % error_rate[-1]))
             self.plot_error_rate(error_rate)
         except:
             self.trainError.setText('<font color="red"><i>Wrong values!</i></font>')
@@ -184,7 +184,11 @@ class MainWindow(QDialog):
         results = self.net.test(self.test_set)
 
         for el in results:
-            self.testBrowser.append(str(el))
+            if int(el[-1]) == 1:
+                string = "<font color='red'>%s</font>" % str(el[:-1])
+                self.testBrowser.append(string)
+            else:
+                self.testBrowser.append(el[:-1])
 
 app = QApplication(sys.argv)
 form = MainWindow()
