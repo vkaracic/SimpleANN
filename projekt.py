@@ -5,8 +5,6 @@ import math
 from PySide.QtCore import *
 from PySide.QtGui import *
 
-import numpy as np
-
 from matplotlib import *
 matplotlib.rcParams['backend.qt4']='PySide'
 from matplotlib.figure import Figure
