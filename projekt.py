@@ -157,6 +157,7 @@ class MainWindow(QDialog):
         for el in x:
             self.ax.plot(x, y, 'b-')
             self.fig.canvas.draw()
+            
     # def plot_error_rate(self, error):
     #     X = range(0,len(error))
     #     Y = error
