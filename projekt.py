@@ -5,6 +5,15 @@ import math
 from PySide.QtCore import *
 from PySide.QtGui import *
 
+import numpy as np
+
+from matplotlib import *
+matplotlib.rcParams['backend.qt4']='PySide'
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
+
+import matplotlib.pyplot as plt
+
 class MainWindow(QDialog):
     def __init__(self):
         self.train_data = [] #initialization of training data
@@ -29,6 +38,7 @@ class MainWindow(QDialog):
         finalErrorRateLabel = QLabel('Final Error Rate:')
         self.finalErrorRate = QLabel()
         saveNN = QPushButton("Save NN")
+        testResultsLabel = QLabel("Inputs \t      Result       Target")
 
         ## Testing part
         loadNNButton = QPushButton("Load NN")
@@ -37,6 +47,15 @@ class MainWindow(QDialog):
         self.loadTestData = QLabel()
         testButton = QPushButton("Test!")
         self.testBrowser = QTextBrowser()
+
+
+        self.fig = plt.Figure()
+        self.ax = self.fig.add_subplot(111)
+        # ax = self.fig.add_subplot(111)
+        # ax.plot([0,1])
+        # generate the canvas to display the plot
+        self.canvas = FigureCanvas(self.fig)
+        self.subplot = self.fig.add_subplot(111)
 
 
 
@@ -66,8 +85,9 @@ class MainWindow(QDialog):
 
         layout.addWidget(finalErrorRateLabel, 7, 0)
         layout.addWidget(self.finalErrorRate, 7, 1)
+        layout.addWidget(self.canvas, 8, 0, 1, 3)
 
-        layout.addWidget(saveNN)
+        layout.addWidget(saveNN, 9, 0)
 
         # Testing part
         layout.addWidget(loadNNButton, 0, 4)
@@ -77,10 +97,10 @@ class MainWindow(QDialog):
         layout.addWidget(self.loadTestData, 1, 5)
 
         layout.addWidget(testButton, 2, 4)
+        layout.addWidget(testResultsLabel, 3, 4, 1, 2)
+        layout.addWidget(self.testBrowser, 4, 4, 5, 3)
 
-        layout.addWidget(self.testBrowser, 3, 4, 5, 3)
-
-
+        
 
         self.setLayout(layout)
 
@@ -126,19 +146,28 @@ class MainWindow(QDialog):
             error_rate = self.nn.train(self.train_data, numIterValue)
             self.finalErrorRate.setText(str("<b>%.5f</b>" % error_rate[-1]))
             self.plot_error_rate(error_rate)
-        except:
+        except e:
             self.trainError.setText('<font color="red"><i>Wrong values!</i></font>')
+            print(e)
 
-    
+
     def plot_error_rate(self, error):
-        X = range(0,len(error))
-        Y = error
-        plot( X, Y)
-        xlabel('Time')
-        ylabel('Error')
-        title('Error rate')
-        grid(True)
-        show()
+        x, y = [], []
+        for a, b in enumerate(error):
+            x.append(a)
+            y.append(b)
+        for el in x:
+            self.ax.plot(x, y, 'b-')
+            self.fig.canvas.draw()
+    # def plot_error_rate(self, error):
+    #     X = range(0,len(error))
+    #     Y = error
+    #     plot( X, Y)
+    #     xlabel('Time')
+    #     ylabel('Error')
+    #     title('Error rate')
+    #     grid(True)
+    #     show()
 
     def save_NN(self):
         format = "*.nn"
@@ -185,7 +214,7 @@ class MainWindow(QDialog):
 
         for el in results:
             if int(el[-1]) == 1:
-                string = "<font color='red'>%s</font>" % str(el[:-1])
+                string = "<font color='red'>%s</font>" % el[:-1]
                 self.testBrowser.append(string)
             else:
                 self.testBrowser.append(el[:-1])
